@@ -1,7 +1,7 @@
 import { get } from 'https'
 import { useState, useEffect } from 'react'
-
-import styles from '../styles/Home.module.css'
+import Image from 'next/image'
+import Search from './Search'
 
 const Home = () => {
   const [data, setData] = useState([])
@@ -23,23 +23,34 @@ const Home = () => {
   }, [])
 
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <div className={styles.grid}>
-        {
-          data.map(x => (
-            <div key={x.name} className={styles.card}>
-                <ul>
-                  <li>Name: {x.name}</li>
-                  <li>Description: {x.description}</li>
-                  <li>Affection: {x.affection_level}</li>
-                </ul>
-            </div>
-          ))
-        }
-        </div>
-      </main>
-    </div>
+    <main className='container'>
+      <Search />
+
+      <div className='bg-cyan-800'>
+        {data.map(({ name, image, description, affection_level }) => (
+          <div key={name}>
+            {image?.url
+              ? (
+                <Image src={image.url} width='100' height='100' alt='image' />
+                )
+              : (
+                <span>(No image)</span>
+                )}
+            <ul>
+              <li>
+                <em>Name</em>: {name}
+              </li>
+              <li>
+                <em>Description</em>: {description}
+              </li>
+              <li>
+                <em>Affection Level</em>: {affection_level}
+              </li>
+            </ul>
+          </div>
+        ))}
+      </div>
+    </main>
   )
 }
 
