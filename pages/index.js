@@ -5,7 +5,9 @@ import Search from './Search'
 
 const Home = () => {
   const [data, setData] = useState([])
+  const [query, setQuery] = useState('')
 
+  // TODO cache in localStorage
   useEffect(() => {
     get('https://api.thecatapi.com/v1/breeds', res => {
       if (res.statusCode !== 200) return setData([{ Error: 'Invalid response code' }])
@@ -24,10 +26,15 @@ const Home = () => {
 
   return (
     <main className='container'>
-      <Search />
+      <Search query={query} setQuery={setQuery} />
 
       <div className='bg-cyan-800'>
-        {data.map(({ name, image, description, affection_level }) => (
+        {data
+        .filter(x => {
+          // TODO fzf
+          return x.name.toLowerCase().includes(query.toLowerCase())
+        })
+        .map(({ name, image, description, affection_level }) => (
           <div key={name}>
             {image?.url
               ? (

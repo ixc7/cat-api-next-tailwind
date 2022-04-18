@@ -1,25 +1,27 @@
 import { useState } from 'react'
 
-const Search = () => {
-  const [query, setQuery] = useState('')
+const Search = ({ query, setQuery }) => {
   const [value, setValue] = useState('')
+
+  const clear = () => {
+    setQuery('')
+  }
 
   const onChange = (e) => {
     setValue(e.target.value)
-    setQuery(e.target.value)
   }
 
   const onSubmit = (e) => {
     e.preventDefault()
+    setQuery(value)
     setValue('')
-    console.log(`submit: '${query}'`)
   }
 
   return (
     <div>
       <form onSubmit={onSubmit}>
         <input type="text" placeholder="Search..." value={value} onChange={onChange} />
-        <input type="submit" value=">" />
+        { query ? <span onClick={clear}>[<em>{query}</em>][X]</span> : <input type="submit" value="[>]" /> }
       </form>
     </div>
   )
