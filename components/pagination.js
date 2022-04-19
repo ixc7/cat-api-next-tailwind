@@ -1,5 +1,9 @@
-const Pagination = ({ page, pages, setPage }) => (
+const Pagination = ({ page, pages, setPage, status}) => (
   <div className='text-slate-700 select-none'>
+    {
+      status ?
+      <span>[{status}]{'    '}</span> : null
+    }
     {page > 0
       ? (
         <button onClick={() => {setPage(page - 1)}} className='hover:-translate-y-px hover:scale-105 hover:text-slate-900'>
