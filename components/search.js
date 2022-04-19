@@ -19,16 +19,16 @@ const Search = ({ query, runQuery }) => {
 
   return (
 
-    <form onSubmit={onSubmit}>
-      <input type='text' placeholder='Search...' value={value} onChange={onChange} />
+    <form onSubmit={onSubmit} className='text-slate-600'>
+      <input type='text' placeholder='Search...' value={value} onChange={onChange} className='focus:outline-none' />
       {query
         ? (
-          <span onClick={clear}>
-            [<em>{query}</em>][X]
+          <span onClick={clear} className='cursor-pointer select-none'>
+            [<em className='text-slate-900'>{query}</em>]<span className='relative inline-block hover:-translate-y-px hover:scale-105 hover:text-slate-900'>[X]</span>
           </span>
           )
         : (
-          <input type='submit' value='[>]' />
+          <input type='submit' value='[>]' className='cursor-pointer select-none hover:-translate-y-px hover:scale-105 hover:text-slate-900' />
           )}
     </form>
   )

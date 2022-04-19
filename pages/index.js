@@ -1,6 +1,5 @@
 import { get } from 'https'
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 
 import Pagination from '../components/pagination'
 import Search from '../components/search'
@@ -20,8 +19,8 @@ const Home = () => {
 
   // TODO better error handling
   useEffect(() => {
+    // nothing cached, fetch data from API
     if (!localStorage.getItem('apiData')) {
-      // nothing cached, fetch data from API
       get('https://api.thecatapi.com/v1/breeds', res => {
         if (res.statusCode !== 200) return setData([{ Error: 'Invalid response code' }])
 
@@ -37,43 +36,35 @@ const Home = () => {
           }
         })
       })
+    // use cache
     } else {
-      // use cache
       setData(JSON.parse(localStorage.getItem('apiData')))
     }
   }, [])
 
   return (
     <main className='container mx-auto'>
-
-      <div className='container top-0 px-2 bg-cyan-100 flex justify-between fixed z-10'>
+      <div className='container top-0 px-3 py-1.5 bg-slate-400 flex justify-between fixed z-10 shadow-lg'>
         <Search query={query} runQuery={runQuery} />
         <Pagination page={page} pages={pages} setPage={setPage} />
       </div>
-
-      <div className='bg-cyan-800 mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+      <div className='mt-7 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
         {matches()
           .slice(0 + page * max, max + page * max)
-          .map(({ name, image, description, affection_level }) => (
-            <div key={name} className='border-solid border-2 border-cyan-900 px-2'>
-              {image?.url
-                ? (
-                  <Image src={image.url} width='100' height='100' alt='image' />
+          .map(({ name, image, description, affection_level }, i) => (
+            <div key={name} className={`m-2 cursor-pointer lg:hover:bg-slate-300 hover:shadow-lg lg:hover:scale-105 lg:hover:-translate-y-0.5 transition-transform duration-300 ease-out ${i % 2 === 0 ? 'bg-slate-50' : 'hover:bg-slate-100'}`}>
+                {
+                  image?.url ? (
+                    <div className={`${i % 2 === 0 ? 'bg-slate-50' : ''} relative bg-contain lg:bg-transparent lg:bg-cover bg-no-repeat bg-center w-full lg:h-48 h-60 my-2`} style={{'backgroundImage': `url(${image.url})`}}></div>
+                  ) : (
+                    <div className='w-full lg:h-48 h-60 my-2 flex flex-col justify-end text-right p-1.5 light italic bg-slate-200 text-slate-500'>(No Image)</div>
                   )
-                : (
-                  <span>(No Image)</span>
-                  )}
-              <ul>
-                <li>
-                  <em>{name}</em>
-                </li>
-                <li>
-                  <em>{description}</em>
-                </li>
-                <li>
-                  <em>Affection Level: {affection_level}</em>
-                </li>
-              </ul>
+                }
+                <div className='p-1'>
+                <p className='font-medium text-slate-900'>{name}</p>
+                <p className='text-xs pb-1.5 text-slate-800'>Affection Level: {affection_level}</p>
+                <p className='italic text-sm py-1 text-slate-600'>{description}</p>
+                </div>
             </div>
           ))}
       </div>
