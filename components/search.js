@@ -7,11 +7,11 @@ const Search = ({ query, runQuery }) => {
     runQuery('')
   }
 
-  const onChange = (e) => {
+  const onChange = e => {
     setValue(e.target.value)
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = e => {
     e.preventDefault()
     runQuery(value)
     setValue('')
@@ -19,8 +19,16 @@ const Search = ({ query, runQuery }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <input type="text" placeholder="Search..." value={value} onChange={onChange} />
-      { query ? <span onClick={clear}>[<em>{query}</em>][X]</span> : <input type="submit" value="[>]" /> }
+      <input type='text' placeholder='Search...' value={value} onChange={onChange} />
+      {query
+        ? (
+          <span onClick={clear}>
+            [<em>{query}</em>][X]
+          </span>
+          )
+        : (
+          <input type='submit' value='[>]' />
+          )}
     </form>
   )
 }

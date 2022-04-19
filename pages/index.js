@@ -2,31 +2,19 @@ import { get } from 'https'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Search from '../components/search'
+import Pagination from '../components/pagination'
 
 // TODO cache in localStorage
 // TODO better error handling
-// TODO pagination
-//
-//      max: 20
-//      page count: Math.ceil(data.length / max)
-//                  store count in state (67 items/4 pages)
-//                  recalculate count on each new query
-//
-//      store current page index in state (0-3)
-//      reset index to 0 on each new query
-//
-//      render (a-b) range of items:
-//      data.slice(0 + (max * currentPage), max + (max * currentPage))
-//
-//      render buttons based on count: <-[1][2][3][4]->
-//      highlight current index
-//      buttons change index and should be enabled/disabled accordingly.
 
 const Home = () => {
   const [data, setData] = useState([])
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(0)
   const max = 20
+
+  const matches = () => data.filter(x => x.name.toLowerCase().includes(query.toLowerCase()))
+  const pages = () => matches().length / max
 
   const runQuery = q => {
     setQuery(q)
@@ -54,40 +42,11 @@ const Home = () => {
     <main className='container'>
       <Search query={query} runQuery={runQuery} />
 
-      <div className='bg-cyan-600'>
-        {
-          page > 0 ? <button onClick={() => { setPage(page - 1) }}>{'<'}</button> : <span>&nbsp;&nbsp;</span>
-        }
-
-        {[
-          ...Array(
-            Math.ceil(
-              data.filter(x => x.name.toLowerCase().includes(query.toLowerCase())).length / max
-            )
-          )
-        ].map((x, i) => {
-          return (
-            <button
-              key={x}
-              onClick={() => {
-                setPage(i)
-              }}
-              className={i === page ? 'bold' : ''}
-            >
-              {i + 1}
-            </button>
-          )
-        })}
-
-        {
-          page < ( data.filter(x => x.name.toLowerCase().includes(query.toLowerCase())).length / max ) - 1 ? <button onClick={() => { setPage(page + 1) }}>{'>'}</button> : <span>&nbsp;&nbsp;</span>
-        }
-      </div>
+      <Pagination page={page} pages={pages} setPage={setPage} />
 
       <div className='bg-cyan-800'>
-        {data
-          .filter(x => x.name.toLowerCase().includes(query.toLowerCase()))
-          .slice(0 + (page * max), max + (page * max))
+        {matches()
+          .slice(0 + page * max, max + page * max)
           .map(({ name, image, description, affection_level }) => (
             <div key={name}>
               {image?.url
