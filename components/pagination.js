@@ -1,5 +1,5 @@
 const Pagination = ({ page, pages, setPage }) => (
-  <div className='bg-cyan-600'>
+  <div className='bg-cyan-300'>
     {page > 0
       ? (
         <button onClick={() => {setPage(page - 1)}}>
@@ -12,7 +12,7 @@ const Pagination = ({ page, pages, setPage }) => (
 
     {[...Array(Math.ceil(pages()))].map((x, i) => {
       return (
-        <button key={x} onClick={() => { setPage(i) }} className={i === page ? 'bold' : ''}>
+        <button key={i} onClick={() => { setPage(i) }} className={i === page ? 'bold' : ''}>
           {i + 1}
         </button>
       )
@@ -20,7 +20,7 @@ const Pagination = ({ page, pages, setPage }) => (
 
     {page < pages() - 1
       ? (
-        <button onClick={() => { setPage(page + 1) }}>
+        <button onClick={() => {setPage(page + 1)}}>
           {'>'}
         </button>
       ) : (

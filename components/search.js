@@ -18,6 +18,7 @@ const Search = ({ query, runQuery }) => {
   }
 
   return (
+
     <form onSubmit={onSubmit}>
       <input type='text' placeholder='Search...' value={value} onChange={onChange} />
       {query
